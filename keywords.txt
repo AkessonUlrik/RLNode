@@ -1,0 +1,28 @@
+#######################################
+# Syntax Coloring Map For RLNode
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+RLNode	KEYWORD1
+RLChannel	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin 	KEYWORD2
+addChannel 	KEYWORD2
+SetNodeStartupInfo 	KEYWORD2
+requestNodeConfig 	KEYWORD2
+GetChannelConfig 	KEYWORD2
+SetChannelProperties 	KEYWORD2
+mqttCallback	 	KEYWORD2
+mqttPublishData 	KEYWORD2
+mqttPublishJson 	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
