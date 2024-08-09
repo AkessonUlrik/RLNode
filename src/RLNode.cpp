@@ -1,11 +1,11 @@
 /**
  * RLNode.cpp
- * Version: 1.0.0
+ * Version: 1.1.0
  *
  * This library is created for use with an embedded RealLogger client.
  * The template is created for use with arduino and has the following dependencies to compile:
  *   Library      :    Tested for version
- *   - RLNode     :    - 1.0.0
+ *   - RLNode     :    - 1.1.0
  *
  * Owned by: RealTest AB
  * Author: Gustav Radbrandt, Simon Friberg, Ulrik Åkesson
@@ -151,14 +151,18 @@ void RLChannel::publishData()
     
     char outputString[MAX_GENERAL_STRING_LENGTH];
     bool forcePublish = false;
+    Serial.println(F("Triggering sensor function"));
     sensorFunction(outputString, CalibrationValueK, CalibrationValueM, &forcePublish);
     if (Active &&
         logNode.Time-ActivationTime >= 1000 &&
         ((unsigned long)(logNode.Time - PreviousTime) >= (1000/SampleRate) || forcePublish))
     {
+        Serial.print(F("Publishing sensor data: "));
+        Serial.println(outputString);
         logNode.mqttPublishData(PublishTopic, outputString);
         strcpy(PreviousOutputString,outputString);
         PreviousTime = logNode.Time;
+        Serial.println(F("Data published"));
     }
 
 }
@@ -525,9 +529,15 @@ void RLNode::mqttCallback(char* topic, char* payload)
 void RLNode::mqttPublishData(char* topic, char* payload) 
 {
     // Attempt to publish a value to the response topic
+    Serial.print(F("Attempting to publish data: "));
+    Serial.print(payload);
+    Serial.print(F(" on topic: "));
+    Serial.println(topic);
+
     if (!mqttClient.publish(topic,payload))
     {
         Serial.println(F("[Error] Failed to send."));
+        delay(500);
     }
 }
 
@@ -541,6 +551,7 @@ void RLNode::mqttPublishJson(char* topic)
     if (!mqttClient.publish(topic, SerializedJson))
     {
         Serial.println(F("[Error] Failed to send."));
+        delay(500);
     }
 }
 
@@ -630,8 +641,12 @@ void RLNode::RLNodeMqttReconnect(const char* mac)
     // Loop until reconnected
     while (!mqttClient.connected()) {
         Serial.println(F("Attempting to reconnect to MQTT broker..."));
+        Serial.println(F("MAC       :User       :Pass"));
+        Serial.print(mac);
+        Serial.print(MQTTUsername);
+        Serial.println(MQTTPassword);
         // Attempt to connect
-        if (!mqttClient.connect(mac, MQTTUsername, MQTTPassword)) {
+        if (mqttClient.connect(mac, MQTTUsername, MQTTPassword)) {
             Serial.println(F("Connection to MQTT broker [Established]"));
             mqttClient.subscribe(Topic_IdentificationPoll);
             mqttClient.subscribe(Topic_SetNodeConfig);
