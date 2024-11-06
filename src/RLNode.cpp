@@ -104,13 +104,56 @@ void RLChannel::updateConfig()
         MaxSampleRate >= jsonDoc["Payload"]["Configuration"]["SampleRate"] &&
         0 < jsonDoc["Payload"]["Configuration"]["SampleRate"])
     {
-        strcpy(PublishTopic, jsonDoc["Payload"]["Configuration"]["PublishTopic"]);
-        SampleRate = jsonDoc["Payload"]["Configuration"]["SampleRate"];
-        CalibrationValueK = jsonDoc["Payload"]["Configuration"]["kValue"];
-        CalibrationValueM = jsonDoc["Payload"]["Configuration"]["mValue"];
-        strcpy(Unit, jsonDoc["Payload"]["Configuration"]["Unit"]);
-        strcpy(Description, jsonDoc["Payload"]["Configuration"]["Descriptor"]);
-        strcpy(Sensor_ID, jsonDoc["Payload"]["Configuration"]["Sensor_ID"]);
+        
+        if (jsonDoc["Payload"]["Configuration"]["PublishTopic"].is<const char*>()){
+            strcpy(PublishTopic, jsonDoc["Payload"]["Configuration"]["PublishTopic"]);
+        }
+        else{
+            strcpy(PublishTopic, "");
+        }
+
+        if (jsonDoc["Payload"]["Configuration"]["SampleRate"].is<float>()){
+            SampleRate = jsonDoc["Payload"]["Configuration"]["SampleRate"];
+        }
+        else{
+             SampleRate = 0;
+        }
+
+        if (jsonDoc["Payload"]["Configuration"]["kValue"].is<float>()){
+            CalibrationValueK = jsonDoc["Payload"]["Configuration"]["kValue"];
+        }
+        else{
+             CalibrationValueK = 0;
+        }
+
+        if (jsonDoc["Payload"]["Configuration"]["mValue"].is<float>()){
+            CalibrationValueM = jsonDoc["Payload"]["Configuration"]["mValue"];
+        }
+        else{
+             CalibrationValueM = 0;
+        }
+
+        if (jsonDoc["Payload"]["Configuration"]["Unit"].is<const char*>()){
+            strcpy(Unit, jsonDoc["Payload"]["Configuration"]["Unit"]);
+        }
+        else{
+            strcpy(Unit, "");
+        }
+
+        if (jsonDoc["Payload"]["Configuration"]["Descriptor"].is<const char*>()){
+            strcpy(Description, jsonDoc["Payload"]["Configuration"]["Descriptor"]);
+        }
+        else{
+            strcpy(Description, "");
+        }
+
+        if (jsonDoc["Payload"]["Configuration"]["Sensor_ID"].is<const char*>()){
+            strcpy(Sensor_ID, jsonDoc["Payload"]["Configuration"]["Sensor_ID"]);
+        }
+        else{
+            strcpy(Sensor_ID, "");
+        }
+
         Serial.println(SampleRate);
     }
     else
